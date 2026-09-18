@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #0a192f;
+  --purple: #7928ca;
+  --purple-light: #9852f7;
+  --mint: #64ffda;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-navy text-pearl font-sans antialiased overflow-x-hidden;
+  background-image: radial-gradient(
+      ellipse 80% 50% at 20% -10%,
+      rgba(121, 40, 202, 0.18),
+      transparent 60%
+    ),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(152, 82, 247, 0.12), transparent 55%);
+  text-rendering: optimizeLegibility;
+}
+
+/* background-attachment: fixed is janky on iOS/Android — enable only on larger screens */
+@media (min-width: 768px) {
+  body {
+    background-attachment: fixed;
+  }
+}
+
+/* Kill the grey tap flash on touch devices */
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+::selection {
+  background: rgba(152, 82, 247, 0.55);
+  color: #ffffff;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a192f;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #7928ca, #9852f7);
+  border-radius: 8px;
+  border: 2px solid #0a192f;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9852f7, #a78bfa);
+}
+
+/* ---------- Utility classes ---------- */
+@layer components {
+  .glass-card {
+    @apply relative rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+  }
+
+  .glow-border {
+    position: relative;
+  }
+  .glow-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(152, 82, 247, 0.7),
+      rgba(100, 255, 218, 0.25) 50%,
+      rgba(152, 82, 247, 0.15)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-white via-[#E9D5FF] to-[#9852F7] bg-clip-text text-transparent;
+  }
+
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-brand px-7 py-3.5 font-heading font-semibold text-white text-sm md:text-base shadow-glow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_36px_rgba(152,82,247,0.7)] active:translate-y-0 disabled:opacity-60;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3.5 font-heading font-semibold text-pearl text-sm md:text-base backdrop-blur-md transition-all duration-300 hover:border-grape-light/60 hover:bg-grape-light/10 hover:shadow-glow-sm;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-mist backdrop-blur-sm transition-colors duration-300 hover:border-grape-light/50 hover:text-pearl;
+  }
+
+  .section-pad {
+    @apply px-5 sm:px-8 lg:px-12 py-20 md:py-28;
+  }
+
+  .heading-xl {
+    @apply font-heading font-extrabold leading-[1.08] tracking-tight;
+    /* Fluid type: smooth scaling between ~2.15rem and 3.75rem instead of hard breakpoints */
+    font-size: clamp(2.15rem, 1rem + 4.2vw, 3.75rem);
+    text-wrap: balance;
+  }
+
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-grape-light/30 bg-grape-light/10 px-4 py-1.5 text-[11px] md:text-xs font-semibold uppercase tracking-[0.22em] text-grape-soft;
+  }
+
+  .input-shell {
+    @apply w-full rounded-xl border border-white/10 bg-navy-light/80 px-4 py-3.5 pl-12 text-pearl placeholder:text-muted/60 outline-none transition-all duration-300 focus:border-grape-light/70 focus:ring-2 focus:ring-grape-light/25 focus:shadow-glow-sm;
+    /* 16px on mobile prevents iOS Safari auto-zoom when focusing inputs */
+    font-size: 16px;
+  }
+  @media (min-width: 768px) {
+    .input-shell {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+/* ---------- Marquee ---------- */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 34s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@layer components {
+  /* ---------- Glow orb ---------- */
+  .orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(70px);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Cheaper blur + lower opacity on phones for smoother 60fps scrolling */
+  @media (max-width: 640px) {
+    .orb {
+      filter: blur(45px);
+      opacity: 0.32;
+    }
+  }
+}
+
+/* ---------- Grid pattern ---------- */
+.grid-pattern {
+  background-image: linear-gradient(rgba(152, 82, 247, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(152, 82, 247, 0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 75%);
+}
+
+/* ---------- Confetti ---------- */
+.confetti-piece {
+  position: absolute;
+  top: -4vh;
+  animation: confetti-fall linear forwards;
+}
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-4vh) rotate(0deg);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* ---------- Shimmer text ---------- */
+.shimmer {
+  background: linear-gradient(
+    110deg,
+    #ffffff 20%,
+    #e9d5ff 35%,
+    #9852f7 50%,
+    #e9d5ff 65%,
+    #ffffff 80%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
